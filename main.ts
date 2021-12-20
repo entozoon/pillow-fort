@@ -1,10 +1,7 @@
 import Game from "./lib/game";
 const initGame = (): void => {
-  const canvasElement = document.getElementById(
-    "game-canvas"
-  ) as HTMLCanvasElement;
-  const game = new Game({ canvasElement });
-  game.createScene().animate();
+  const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+  const game = new Game({ canvas });
 };
 window.addEventListener("DOMContentLoaded", initGame);
 // @ts-ignore

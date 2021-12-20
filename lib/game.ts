@@ -7,15 +7,13 @@ import {
   Vector3,
 } from "babylonjs";
 export default class Game {
-  private canvas!: HTMLCanvasElement;
-  private engine!: Engine;
-  private scene!: Scene;
-  private camera!: FreeCamera;
-  constructor({ canvasElement }: { canvasElement: HTMLCanvasElement }) {
-    this.canvas = canvasElement;
+  canvas!: HTMLCanvasElement;
+  engine!: Engine;
+  scene!: Scene;
+  camera!: FreeCamera;
+  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
+    this.canvas = canvas;
     this.engine = new Engine(this.canvas, true);
-  }
-  createScene(): Game {
     this.scene = new Scene(this.engine);
     const cameraPos = new Vector3(0, 5, -10);
     this.camera = new FreeCamera("maincam", cameraPos, this.scene);
@@ -28,10 +26,9 @@ export default class Game {
     sphere.position.y = 1;
     const groundOpts = { width: 6, height: 6, subdivisions: 2 };
     MeshBuilder.CreateGround("mainground", groundOpts, this.scene);
-    return this;
+    this.animate();
   }
-  animate(): Game {
+  animate() {
     this.engine.runRenderLoop(() => this.scene.render());
-    return this;
   }
 }
