@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "ES2018",
-    "strict": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "strict": false,
+    "alwaysStrict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "babylonjs": [ "node_modules/babylonjs/babylon.d.ts" ]
+      "babylonjs": ["node_modules/babylonjs/babylon.d.ts"]
     }
   }
 }
