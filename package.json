@@ -1,0 +1,30 @@
+{
+  "name": "pillow-fort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/entozoon/pillow-fort.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/entozoon/pillow-fort/issues"
+  },
+  "homepage": "https://github.com/entozoon/pillow-fort#readme",
+  "dependencies": {
+    "babylonjs": "^4.2.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "typescript": "^4.5.4"
+  }
+}
