@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/entozoon/pillow-fort#readme",
   "dependencies": {
-    "babylonjs": "^4.2.0"
+    "@babylonjs/core": "^4.2.0",
+    "babylonjs": "^5.0.0-alpha.65"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.5",
