@@ -4,6 +4,7 @@ import {
   FreeCamera,
   HemisphericLight,
   Mesh,
+  FollowCamera,
   MeshBuilder,
   Scene,
   StandardMaterial,
@@ -19,8 +20,8 @@ export default class Game {
     this.canvas = canvas;
     this.engine = new Engine(this.canvas, true);
     this.scene = new Scene(this.engine);
-    this.camera = new FreeCamera("camera", new Vector3(0, 5, -10), this.scene);
-    this.camera.setTarget(Vector3.Zero());
+    // this.camera = new FreeCamera("camera", new Vector3(0, 5, -10), this.scene);
+    // this.camera.setTarget(Vector3.Zero());
     new HemisphericLight("hemlight", new Vector3(1, 1, 0), this.scene);
     MeshBuilder.CreateTiledGround(
       "floor",
@@ -35,7 +36,7 @@ export default class Game {
     let box = MeshBuilder.CreateBox("boxy", {
       size: 4,
     });
-    box.position.y = 2;
+    box.position.y = 4;
     // let tiledBox = MeshBuilder.CreateBox("boxy", {
     //   sideOrientation: BABYLON.Mesh.DOUBLESIDE,
     //   width: 6,
@@ -51,8 +52,16 @@ export default class Game {
     let i = 0;
     // setInterval(() => {
     // }, 100);
+
+    const camera = new FollowCamera(
+      "FollowCam",
+      new Vector3(-6, 0, 0),
+      this.scene
+    );
+    camera.lockedTarget = box;
     this.engine.runRenderLoop(() => {
       box.rotation = new Vector3(0, Math.sin(i / 100) * 2, 0);
+      box.position.x = Math.sin(i / 100) * 2;
       // sphere.position.y = Math.sin(i) * 2;
       i++;
       this.scene.render();
