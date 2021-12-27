@@ -22,6 +22,8 @@
   "homepage": "https://github.com/entozoon/pillow-fort#readme",
   "dependencies": {
     "@babylonjs/core": "^4.2.0",
+    "ammo.js": "github:kripken/ammo.js",
+    "ammojs-typed": "^1.0.6",
     "babylonjs": "^5.0.0-alpha.65"
   },
   "devDependencies": {
