@@ -13,6 +13,7 @@ import {
   Texture,
   Vector3,
   PhysicsImpostor,
+  Color3,
 } from "@babylonjs/core";
 export default class Game {
   canvas!: HTMLCanvasElement;
@@ -41,20 +42,35 @@ export default class Game {
         );
         this.light.intensity = 0.8;
         this.initGround();
-        let box = MeshBuilder.CreateBox("boxy", {
-          size: 1,
-        });
-        box.position.y = 4;
+        let box = MeshBuilder.CreateBox(
+          "box",
+          {
+            width: 1,
+            height: 1,
+            depth: 1,
+          },
+          this.scene
+        );
+        box.position.y = 8;
+        box.forceSharedVertices();
+        box.increaseVertices(5);
         let material = new StandardMaterial("bricks", this.scene);
         material.diffuseTexture = new Texture(
           "https://assets.babylonjs.com/environments/bricktile.jpg",
           this.scene
         );
         box.material = material;
-        const softBoxOptions = {
-          mass: 5,
-          pressure: 0,
+        let softBoxOptions = {
+          mass: 1,
+          friction: 1,
+          restitution: 0.3,
+          pressure: 1000,
+          velocityIterations: 10,
+          positionIterations: 10,
+          stiffness: 0.5,
+          damping: 0.05,
         };
+        this.scene.enablePhysics(null, new AmmoJSPlugin());
         box.physicsImpostor = new PhysicsImpostor(
           box,
           PhysicsImpostor.SoftbodyImpostor,
@@ -65,8 +81,11 @@ export default class Game {
         let i = 0;
         this.engine.runRenderLoop(() => {
           box.rotation = new Vector3(0, Math.sin(i / 100) * 2, 0);
-          box.position.x = Math.sin(i / 100) * 2;
+          // box.position.x = Math.sin(i / 100) * 2;
           i++;
+          if (i % 400 === 0) {
+            box.applyImpulse(new Vector3(0, -10, 0), box.position);
+          }
           this.scene.render();
         });
       });
@@ -82,6 +101,7 @@ export default class Game {
       "https://www.babylonjs-playground.com/textures/ground.jpg",
       this.scene
     );
+    bleh.diffuseColor = Color3.Red();
     this.ground.material = bleh;
     this.ground.physicsImpostor = new PhysicsImpostor(
       this.ground,
