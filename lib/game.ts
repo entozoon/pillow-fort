@@ -14,6 +14,7 @@ import {
   Vector3,
   PhysicsImpostor,
   Color3,
+  KeyboardEventTypes,
 } from "@babylonjs/core";
 export default class Game {
   canvas!: HTMLCanvasElement;
@@ -80,13 +81,22 @@ export default class Game {
         this.initCamera(box);
         let i = 0;
         this.engine.runRenderLoop(() => {
-          box.rotation = new Vector3(0, Math.sin(i / 100) * 2, 0);
-          // box.position.x = Math.sin(i / 100) * 2;
-          i++;
-          if (i % 400 === 0) {
-            box.applyImpulse(new Vector3(0, -10, 0), box.position);
-          }
+          // box.rotation = new Vector3(0, Math.sin(i / 1000) * 1, 0);
+          // // box.position.x = Math.sin(i / 100) * 2;
+          // i++;
+          // if (i % 400 === 0) {
+          //   box.applyImpulse(new Vector3(0, -10, 0), box.position);
+          // }
           this.scene.render();
+        });
+        this.scene.onKeyboardObservable.add((kbInfo) => {
+          if (kbInfo.type === KeyboardEventTypes.KEYDOWN) {
+            const { key } = kbInfo.event;
+            box.position.x +=
+              key === "ArrowLeft" ? 1 : key === "ArrowRight" ? -1 : 0;
+            box.position.z +=
+              key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
+          }
         });
       });
   }
@@ -101,7 +111,7 @@ export default class Game {
       "https://www.babylonjs-playground.com/textures/ground.jpg",
       this.scene
     );
-    bleh.diffuseColor = Color3.Red();
+    bleh.diffuseColor = Color3.FromHexString("#00ccff");
     this.ground.material = bleh;
     this.ground.physicsImpostor = new PhysicsImpostor(
       this.ground,
