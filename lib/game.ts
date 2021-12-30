@@ -43,41 +43,10 @@ export default class Game {
         );
         this.light.intensity = 0.8;
         this.initGround();
-        let box = MeshBuilder.CreateBox(
-          "box",
-          {
-            width: 1,
-            height: 1,
-            depth: 1,
-          },
-          this.scene
-        );
-        box.position.y = 8;
-        box.forceSharedVertices();
-        box.increaseVertices(5);
-        let material = new StandardMaterial("bricks", this.scene);
-        material.diffuseTexture = new Texture(
-          "https://assets.babylonjs.com/environments/bricktile.jpg",
-          this.scene
-        );
-        box.material = material;
-        let softBoxOptions = {
-          mass: 1,
-          friction: 1,
-          restitution: 0.3,
-          pressure: 1000,
-          velocityIterations: 10,
-          positionIterations: 10,
-          stiffness: 0.5,
-          damping: 0.05,
-        };
-        this.scene.enablePhysics(null, new AmmoJSPlugin());
-        box.physicsImpostor = new PhysicsImpostor(
-          box,
-          PhysicsImpostor.SoftbodyImpostor,
-          softBoxOptions,
-          this.scene
-        );
+        let box = this.initBox();
+        setInterval(() => {
+          this.initBox(Math.random() * 20 - 10, Math.random() * 20 - 10);
+        }, 200);
         this.initCamera(box);
         let i = 0;
         this.engine.runRenderLoop(() => {
@@ -100,19 +69,61 @@ export default class Game {
         });
       });
   }
+  private initBox(x, z) {
+    let box = MeshBuilder.CreateBox(
+      "box",
+      {
+        width: 1,
+        height: 1,
+        depth: 1,
+      },
+      this.scene
+    );
+    box.position.y = 8;
+    box.position.x = x;
+    box.position.z = z;
+    box.forceSharedVertices();
+    box.increaseVertices(5);
+    let material = new StandardMaterial("bricks", this.scene);
+    material.diffuseTexture = new Texture(
+      "https://assets.babylonjs.com/environments/bricktile.jpg",
+      this.scene
+    );
+    box.material = material;
+    let softBoxOptions = {
+      mass: 10,
+      friction: 1,
+      restitution: 0.3,
+      pressure: 1000,
+      velocityIterations: 10,
+      positionIterations: 10,
+      stiffness: 0.5,
+      damping: 0.05,
+    };
+    box.physicsImpostor = new PhysicsImpostor(
+      box,
+      PhysicsImpostor.SoftbodyImpostor,
+      softBoxOptions,
+      this.scene
+    );
+    setTimeout(() => {
+      box.physicsImpostor.dispose();
+    }, 4000);
+    return box;
+  }
   private initGround() {
     this.ground = MeshBuilder.CreateBox(
       "ground",
       { width: 10, depth: 10, height: 1 },
       this.scene
     );
-    var bleh = new StandardMaterial("bleh", this.scene);
-    bleh.diffuseTexture = new Texture(
+    var material = new StandardMaterial("material", this.scene);
+    material.diffuseTexture = new Texture(
       "https://www.babylonjs-playground.com/textures/ground.jpg",
       this.scene
     );
-    bleh.diffuseColor = Color3.FromHexString("#00ccff");
-    this.ground.material = bleh;
+    material.diffuseColor = Color3.FromHexString("#00ccff");
+    this.ground.material = material;
     this.ground.physicsImpostor = new PhysicsImpostor(
       this.ground,
       PhysicsImpostor.BoxImpostor,
@@ -127,6 +138,6 @@ export default class Game {
       this.scene
     );
     camera.lockedTarget = box;
-    camera.radius = 5;
+    camera.radius = 10;
   }
 }
