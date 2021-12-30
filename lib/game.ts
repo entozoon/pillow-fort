@@ -46,7 +46,7 @@ export default class Game {
         let box = this.initBox();
         setInterval(() => {
           this.initBox(Math.random() * 20 - 10, Math.random() * 20 - 10);
-        }, 200);
+        }, 20);
         this.initCamera(box);
         let i = 0;
         this.engine.runRenderLoop(() => {
@@ -74,12 +74,12 @@ export default class Game {
       "box",
       {
         width: 1,
-        height: 1,
+        height: 0.2,
         depth: 1,
       },
       this.scene
     );
-    box.position.y = 8;
+    box.position.y = 2;
     box.position.x = x;
     box.position.z = z;
     box.forceSharedVertices();
@@ -91,13 +91,13 @@ export default class Game {
     );
     box.material = material;
     let softBoxOptions = {
-      mass: 10,
+      mass: 1,
       friction: 1,
       restitution: 0.3,
-      pressure: 1000,
+      pressure: 500,
       velocityIterations: 10,
       positionIterations: 10,
-      stiffness: 0.5,
+      stiffness: 0.95,
       damping: 0.05,
     };
     box.physicsImpostor = new PhysicsImpostor(
@@ -108,7 +108,7 @@ export default class Game {
     );
     setTimeout(() => {
       box.physicsImpostor.dispose();
-    }, 4000);
+    }, 2000);
     return box;
   }
   private initGround() {
