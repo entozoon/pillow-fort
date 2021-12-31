@@ -28,44 +28,57 @@ export default class Game {
         );
         this.light.intensity = 0.8;
         this.initGround();
-        let hero = this.initBox(0, 0);
         setInterval(() => {
           this.initBox(
             Math.round(Math.random() * 20 - 10),
             Math.round(Math.random() * 20 - 10)
           );
         }, 1000);
+        var hero = BABYLON.Mesh.CreateBox("hero", 0.5, this.scene);
+        hero.physicsImpostor = new BABYLON.PhysicsImpostor(
+          hero,
+          BABYLON.PhysicsImpostor.BoxImpostor,
+          { mass: 10, restitution: 0.9, friction: 1 },
+          this.scene
+        );
+        hero.position.y = 5;
         this.initCamera(hero);
-        let i = 0;
         this.engine.runRenderLoop(() => {
-          // box.rotation = new Vector3(0, Math.sin(i / 1000) * 1, 0);
-          // // box.position.x = Math.sin(i / 100) * 2;
-          // i++;
-          // if (i % 400 === 0) {
-          //   box.applyImpulse(new Vector3(0, -10, 0), box.position);
-          // }
           this.scene.render();
         });
         this.scene.onKeyboardObservable.add((kbInfo) => {
           if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
             const { key } = kbInfo.event;
-            const turnAmount = ["ArrowLeft", "a"].includes(key)
-              ? -0.2
-              : ["ArrowRight", "d"].includes(key)
-              ? 0.2
-              : 0;
-            const moveAmount = ["ArrowUp", "w"].includes(key)
-              ? 0.7
-              : ["ArrowDown", "s"].includes(key)
-              ? -0.7
-              : 0;
-            hero.rotation = new BABYLON.Vector3(
-              0,
-              hero.rotation.y + turnAmount,
-              0
-            );
-            hero.position.z -= Math.cos(hero.rotation.y) * moveAmount;
-            hero.position.x -= Math.sin(hero.rotation.y) * moveAmount;
+            // const turnAmount = ["ArrowLeft", "a"].includes(key)
+            //   ? -0.2
+            //   : ["ArrowRight", "d"].includes(key)
+            //   ? 0.2
+            //   : 0;
+            // const moveAmount = ["ArrowUp", "w"].includes(key)
+            //   ? 0.7
+            //   : ["ArrowDown", "s"].includes(key)
+            //   ? -0.7
+            //   : 0;
+            // hero.rotation = new BABYLON.Vector3(
+            //   0,
+            //   hero.rotation.y + turnAmount,
+            //   0
+            // );
+            // hero.position.z -= Math.cos(hero.rotation.y) * moveAmount;
+            // hero.position.x -= Math.sin(hero.rotation.y) * moveAmount;
+            // Argh, am I gonna have to write my own velocity functions
+            if (["ArrowUp", "w"].includes(key)) {
+              hero.physicsImpostor.applyImpulse(
+                new BABYLON.Vector3(0, 0, -20),
+                hero.getAbsolutePosition()
+              );
+            }
+            if (key === " ") {
+              hero.physicsImpostor.applyImpulse(
+                new BABYLON.Vector3(0, 5, 0),
+                hero.getAbsolutePosition()
+              );
+            }
           }
         });
       });
