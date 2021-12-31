@@ -28,11 +28,14 @@ export default class Game {
         );
         this.light.intensity = 0.8;
         this.initGround();
-        let box = this.initBox();
+        let hero = this.initBox(0, 0);
         setInterval(() => {
-          this.initBox(Math.random() * 20 - 10, Math.random() * 20 - 10);
+          this.initBox(
+            Math.round(Math.random() * 20 - 10),
+            Math.round(Math.random() * 20 - 10)
+          );
         }, 1000);
-        this.initCamera(box);
+        this.initCamera(hero);
         let i = 0;
         this.engine.runRenderLoop(() => {
           // box.rotation = new Vector3(0, Math.sin(i / 1000) * 1, 0);
@@ -46,10 +49,23 @@ export default class Game {
         this.scene.onKeyboardObservable.add((kbInfo) => {
           if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
             const { key } = kbInfo.event;
-            box.position.x +=
-              key === "ArrowLeft" ? 1 : key === "ArrowRight" ? -1 : 0;
-            box.position.z +=
-              key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
+            const turnAmount = ["ArrowLeft", "a"].includes(key)
+              ? -0.2
+              : ["ArrowRight", "d"].includes(key)
+              ? 0.2
+              : 0;
+            const moveAmount = ["ArrowUp", "w"].includes(key)
+              ? 0.7
+              : ["ArrowDown", "s"].includes(key)
+              ? -0.7
+              : 0;
+            hero.rotation = new BABYLON.Vector3(
+              0,
+              hero.rotation.y + turnAmount,
+              0
+            );
+            hero.position.z -= Math.cos(hero.rotation.y) * moveAmount;
+            hero.position.x -= Math.sin(hero.rotation.y) * moveAmount;
           }
         });
       });
@@ -128,6 +144,6 @@ export default class Game {
       this.scene
     );
     camera.lockedTarget = box;
-    camera.radius = 10;
+    camera.radius = 6;
   }
 }
