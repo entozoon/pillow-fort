@@ -1,44 +1,29 @@
 import Ammo from "ammojs-typed";
 import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
-import {
-  ArcRotateCamera,
-  Engine,
-  FreeCamera,
-  HemisphericLight,
-  Mesh,
-  FollowCamera,
-  MeshBuilder,
-  Scene,
-  StandardMaterial,
-  Texture,
-  Vector3,
-  PhysicsImpostor,
-  Color3,
-  KeyboardEventTypes,
-} from "@babylonjs/core";
+import * as BABYLON from "@babylonjs/core";
 export default class Game {
   canvas!: HTMLCanvasElement;
-  engine!: Engine;
-  scene!: Scene;
-  camera!: FreeCamera;
-  ground!: Mesh;
-  light!: HemisphericLight;
+  engine!: BABYLON.Engine;
+  scene!: BABYLON.Scene;
+  camera!: BABYLON.FreeCamera;
+  ground!: BABYLON.Mesh;
+  light!: BABYLON.HemisphericLight;
   constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     Ammo()
       .then((api) => {
         this.canvas = canvas;
-        this.engine = new Engine(this.canvas, true);
-        this.scene = new Scene(this.engine);
+        this.engine = new BABYLON.Engine(this.canvas, true);
+        this.scene = new BABYLON.Scene(this.engine);
         this.scene.enablePhysics(
-          new Vector3(0, -9.81, 0),
+          new BABYLON.Vector3(0, -9.81, 0),
           // Ammo as IPhysicsEnginePlugin
           new AmmoJSPlugin()
         );
       })
       .then(() => {
-        this.light = new HemisphericLight(
+        this.light = new BABYLON.HemisphericLight(
           "hemlight",
-          new Vector3(1, 1, 0),
+          new BABYLON.Vector3(1, 1, 0),
           this.scene
         );
         this.light.intensity = 0.8;
@@ -59,7 +44,7 @@ export default class Game {
           this.scene.render();
         });
         this.scene.onKeyboardObservable.add((kbInfo) => {
-          if (kbInfo.type === KeyboardEventTypes.KEYDOWN) {
+          if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
             const { key } = kbInfo.event;
             box.position.x +=
               key === "ArrowLeft" ? 1 : key === "ArrowRight" ? -1 : 0;
@@ -70,7 +55,7 @@ export default class Game {
       });
   }
   private initBox(x, z) {
-    let box = MeshBuilder.CreateBox(
+    let box = BABYLON.MeshBuilder.CreateBox(
       "box",
       {
         width: 1,
@@ -84,12 +69,12 @@ export default class Game {
     box.position.z = z;
     box.forceSharedVertices();
     box.increaseVertices(5);
-    let material = new StandardMaterial("bricks", this.scene);
-    material.diffuseTexture = new Texture(
+    let material = new BABYLON.StandardMaterial("bricks", this.scene);
+    material.diffuseTexture = new BABYLON.Texture(
       "https://assets.babylonjs.com/environments/bricktile.jpg",
       this.scene
     );
-    material.diffuseColor = Color3.FromInts(
+    material.diffuseColor = BABYLON.Color3.FromInts(
       Math.round(Math.random() * 255),
       Math.round(Math.random() * 255),
       Math.round(Math.random() * 255)
@@ -105,9 +90,9 @@ export default class Game {
       stiffness: 0.95,
       damping: 0.05,
     };
-    box.physicsImpostor = new PhysicsImpostor(
+    box.physicsImpostor = new BABYLON.PhysicsImpostor(
       box,
-      PhysicsImpostor.SoftbodyImpostor,
+      BABYLON.PhysicsImpostor.SoftbodyImpostor,
       softBoxOptions,
       this.scene
     );
@@ -117,29 +102,29 @@ export default class Game {
     return box;
   }
   private initGround() {
-    this.ground = MeshBuilder.CreateBox(
+    this.ground = BABYLON.MeshBuilder.CreateBox(
       "ground",
       { width: 10, depth: 10, height: 1 },
       this.scene
     );
-    var material = new StandardMaterial("material", this.scene);
-    material.diffuseTexture = new Texture(
+    var material = new BABYLON.StandardMaterial("material", this.scene);
+    material.diffuseTexture = new BABYLON.Texture(
       "https://www.babylonjs-playground.com/textures/ground.jpg",
       this.scene
     );
-    material.diffuseColor = Color3.FromHexString("#00ccff");
+    material.diffuseColor = BABYLON.Color3.FromHexString("#00ccff");
     this.ground.material = material;
-    this.ground.physicsImpostor = new PhysicsImpostor(
+    this.ground.physicsImpostor = new BABYLON.PhysicsImpostor(
       this.ground,
-      PhysicsImpostor.BoxImpostor,
+      BABYLON.PhysicsImpostor.BoxImpostor,
       { mass: 0, friction: 0.5, restitution: 0 },
       this.scene
     );
   }
-  private initCamera(box: Mesh) {
-    const camera = new FollowCamera(
+  private initCamera(box: BABYLON.Mesh) {
+    const camera = new BABYLON.FollowCamera(
       "FollowCam",
-      new Vector3(-100, 0, 0),
+      new BABYLON.Vector3(-100, 0, 0),
       this.scene
     );
     camera.lockedTarget = box;
