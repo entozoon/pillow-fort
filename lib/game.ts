@@ -46,7 +46,7 @@ export default class Game {
         let box = this.initBox();
         setInterval(() => {
           this.initBox(Math.random() * 20 - 10, Math.random() * 20 - 10);
-        }, 20);
+        }, 1000);
         this.initCamera(box);
         let i = 0;
         this.engine.runRenderLoop(() => {
@@ -88,6 +88,11 @@ export default class Game {
     material.diffuseTexture = new Texture(
       "https://assets.babylonjs.com/environments/bricktile.jpg",
       this.scene
+    );
+    material.diffuseColor = Color3.FromInts(
+      Math.round(Math.random() * 255),
+      Math.round(Math.random() * 255),
+      Math.round(Math.random() * 255)
     );
     box.material = material;
     let softBoxOptions = {
